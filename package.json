@@ -1,0 +1,34 @@
+{
+  "name": "hw6",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u00001\u00009\u00007\u0000-\u0000c\u0000a\u0000m\u0000p\u0000u\u0000s\u0000w\u0000i\u0000r\u0000e\u0000-\u0000l\u0000i\u0000t\u0000e\u0000-\u0000p\u0000t\u00001\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cindych/197-campuswire-lite-pt1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cindych/197-campuswire-lite-pt1/issues"
+  },
+  "homepage": "https://github.com/cindych/197-campuswire-lite-pt1#readme",
+  "dependencies": {
+    "babel-eslint": "^10.1.0",
+    "cookie-session": "^2.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.9"
+  },
+  "devDependencies": {
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jsx-a11y": "^6.3.0",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4 || ^3 || ^2.3.0 || ^1.7.0"
+  }
+}
