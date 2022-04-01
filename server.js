@@ -31,7 +31,14 @@ app.get('/', (req, res) => {
   res.send('hello world')
 })
 
+// error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500)
+  res.send(`An error occurred! (${err})`)
+})
+
 // Start listening for requests
 app.listen(port, () => {
-  console.log('Listening on port ' + port)
+  console.log(`Listening on port ${port}`)
 })
