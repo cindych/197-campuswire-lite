@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 1234
 const app = express()
 const cookieSession = require('cookie-session')
 
@@ -13,6 +13,8 @@ app.use(cookieSession({
   // maxAge: 24 * 60 * 60 * 1000 // 24 hours
   maxAge: 24 * 60 * 60 * 1000,
 }))
+
+app.use(express.static('dist'))
 
 const accountRouter = require('./routes/account')
 const apiRouter = require('./routes/api')
@@ -27,8 +29,14 @@ mongoose.connect(MONGO_URI, {
   useUnifiedTopology: true,
 })
 
-app.get('/', (req, res) => {
-  res.send('hello world')
+// set favicon
+app.get('/favicon.ico', (req, res) => {
+  res.status(404).send()
+})
+
+// set the initial entry point
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'))
 })
 
 // error handling
