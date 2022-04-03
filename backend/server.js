@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
 
-const port = process.env.PORT || 1234
+const port = process.env.PORT || 3000
 const app = express()
 const cookieSession = require('cookie-session')
 

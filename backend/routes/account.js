@@ -30,6 +30,14 @@ router.post('/login', async ({ body, session }, res, next) => {
   }
 })
 
+router.get('/isLoggedIn', async ({ body, session }, res) => {
+  if (session.username) {
+    res.send(session.username)
+  } else {
+    res.send(null)
+  }
+})
+
 router.post('/logout', isAuthenticated, async (req, res) => {
   req.session.username = null
   res.send('user logout successful')
