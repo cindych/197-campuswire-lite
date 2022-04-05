@@ -36,9 +36,19 @@ const Home = () => {
     try {
       const { data } = await axios.get('api/questions')
       setQuestions(data)
-      // console.log(`currQuestion in getQuestions: ${JSON.stringify(currQuestion)}`)
+      // update answer to curent question, if any change
+      data.forEach(question => {
+        setCurrQuestion(prevState => {
+          if (question._id === prevState._id) {
+            return { ...prevState, answer: question.answer || '' }
+          }
+          return prevState
+        })
+      })
+      return data
     } catch (error) {
       alert('Error in getting questions!')
+      return null
     }
   }
 
@@ -60,19 +70,17 @@ const Home = () => {
   }
 
   const changeQuestion = _id => {
-    axios.get('api/questions').then(response => {
-      response.data.forEach(question => {
-        if (question._id === _id) {
-          setCurrQuestion({
-            ...currQuestion,
-            questionText: question.questionText,
-            answer: question.answer || '',
-            author: question.author,
-            _id: question._id,
-          })
-        }
-      })
-    }).catch(err => alert(err))
+    questions.forEach(question => {
+      if (question._id === _id) {
+        setCurrQuestion({
+          ...currQuestion,
+          questionText: question.questionText,
+          answer: question.answer || '',
+          author: question.author,
+          _id: question._id,
+        })
+      }
+    })
   }
 
   const renderQuestions = () => (
@@ -80,8 +88,7 @@ const Home = () => {
   )
 
   const renderCurrQuestion = () => {
-    // console.log(`currQuestion in renderCurrQuestion: ${JSON.stringify(currQuestion)}`)
-    if (currQuestion.questionText && currQuestion.author) {
+    if (currQuestion.questionText && currQuestion.author && currQuestion._id) {
       return (
         <div className="curr-question">
           <h1>{currQuestion.questionText}</h1>
@@ -96,12 +103,10 @@ const Home = () => {
 
   useEffect(() => {
     checkUserLoggedIn()
-    getQuestions()
 
+    // set curr question to first question if loading for first time
     const firstTime = async () => {
-      const { data } = await axios.get('api/questions')
-      setQuestions(data)
-      // set curr question to first one if loading for first time
+      const data = await getQuestions()
       if (!currQuestion.questionText) {
         setCurrQuestion({
           ...currQuestion,
@@ -112,21 +117,14 @@ const Home = () => {
         })
       }
     }
-
     firstTime()
   }, [])
-
-  useEffect(() => {
-    console.log("questions state changed")
-  }, [questions])
 
   // update getting questions every 2 seconds
   useEffect(() => {
     const intervalID = setInterval(() => {
       getQuestions()
-    }, 5000)
-    // return a clean-up function so that the repetition can be stopped
-    // when the component is unmounted
+    }, 2000)
     return () => clearInterval(intervalID)
   }, [])
 
@@ -147,7 +145,7 @@ const Home = () => {
         </div>
         <div className="right-side">
           {renderCurrQuestion()}
-          {isLoggedIn && <Answer questionId={currQuestion._id} getQuestions={getQuestions} changeQuestion={changeQuestion} />}
+          {isLoggedIn && <Answer questionId={currQuestion._id} />}
         </div>
       </div>
 

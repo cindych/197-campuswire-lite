@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
-const Answer = ({ questionId, getQuestions, changeQuestion }) => {
+const Answer = ({ questionId }) => {
   const [answer, setAnswer] = useState('')
 
   const answerQuestion = async () => {
     try {
       await axios.post('/api/questions/answer', { _id: questionId, answer })
       setAnswer('')
-      changeQuestion(questionId)
     } catch (err) {
       alert('Unable to submit your answer. Please try again!')
     }
