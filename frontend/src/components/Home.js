@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Routes, Route, Outlet, Link, useNavigate,
-} from 'react-router-dom'
 import axios from 'axios'
 
-import Answer from './Answer'
-import Popup from './Popup'
+import LeftSide from './LeftSide'
+import Header from './Header'
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -14,8 +11,7 @@ const Home = () => {
   const [currQuestion, setCurrQuestion] = useState({
     questionText: null, author: null, answer: null, _id: null,
   })
-  const [modalShow, setModalShow] = useState(false)
-  const navigate = useNavigate()
+  const [answer, setAnswer] = useState('')
 
   const checkUserLoggedIn = async () => {
     try {
@@ -52,40 +48,27 @@ const Home = () => {
     }
   }
 
-  const handleLogout = async () => {
+  const answerQuestion = async () => {
     try {
-      await axios.post('/account/logout')
-      checkUserLoggedIn()
+      await axios.post('/api/questions/answer', { _id: currQuestion._id, answer })
+      setAnswer('')
     } catch (err) {
-      alert('Error in logging out.')
-    }
-  }
-
-  const onClickHandler = () => {
-    if (isLoggedIn) {
-      setModalShow(true)
-    } else {
-      navigate('/login')
+      alert('Unable to submit your answer. Please try again!')
     }
   }
 
   const changeQuestion = _id => {
-    questions.forEach(question => {
-      if (question._id === _id) {
-        setCurrQuestion({
-          ...currQuestion,
-          questionText: question.questionText,
-          answer: question.answer || '',
-          author: question.author,
-          _id: question._id,
-        })
-      }
-    })
+    if (_id !== currQuestion._id) { // only execute if different question
+      questions.forEach(question => {
+        if (question._id === _id) {
+          setCurrQuestion({
+            ...currQuestion, questionText: question.questionText, answer: question.answer || '', author: question.author, _id: question._id,
+          })
+        }
+      })
+      setAnswer('')
+    }
   }
-
-  const renderQuestions = () => (
-    questions.map(question => <div key={question._id} className="question"><button type="button" onClick={() => changeQuestion(question._id)}>{question.questionText}</button></div>)
-  )
 
   const renderCurrQuestion = () => {
     if (currQuestion.questionText && currQuestion.author && currQuestion._id) {
@@ -103,17 +86,12 @@ const Home = () => {
 
   useEffect(() => {
     checkUserLoggedIn()
-
     // set curr question to first question if loading for first time
     const firstTime = async () => {
       const data = await getQuestions()
       if (!currQuestion.questionText) {
         setCurrQuestion({
-          ...currQuestion,
-          questionText: data[0].questionText,
-          answer: data[0].answer || '',
-          author: data[0].author,
-          _id: data[0]._id,
+          ...currQuestion, questionText: data[0].questionText, answer: data[0].answer || '', author: data[0].author, _id: data[0]._id,
         })
       }
     }
@@ -130,29 +108,23 @@ const Home = () => {
 
   return (
     <>
-      {isLoggedIn && (
-        <>
-          <p>{`Hello ${username}`}</p>
-          <button type="button" onClick={handleLogout}>Log Out</button>
-        </>
-      )}
+      <Header isLoggedIn={isLoggedIn} checkUserLoggedIn={checkUserLoggedIn} username={username} />
+
       <div className="questions-container">
-        <div className="left-side">
-          <button type="button" onClick={onClickHandler}>{isLoggedIn ? 'Add new Question' : 'Log in to submit a question'}</button>
-          <div className="questions-list">
-            {renderQuestions()}
-          </div>
-        </div>
+        <LeftSide isLoggedIn={isLoggedIn} questions={questions} changeQuestion={changeQuestion} />
         <div className="right-side">
           {renderCurrQuestion()}
-          {isLoggedIn && <Answer questionId={currQuestion._id} />}
+          {isLoggedIn && (
+            <div className="answer-box">
+              <p>Answer this question:</p>
+              <textarea value={answer} onChange={e => setAnswer(e.target.value)} />
+              <button type="button" onClick={answerQuestion} disabled={answer === ''}>
+                Submit Answer
+              </button>
+            </div>
+          )}
         </div>
       </div>
-
-      <Popup
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-      />
     </>
   )
 }

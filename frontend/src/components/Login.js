@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
+import Card from 'react-bootstrap/Card'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+
 const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -22,29 +26,36 @@ const Login = () => {
   }
 
   return (
-    <>
-      <h1>Log In</h1>
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-          loginUser()
-        }}
-      >
-        <label>
-          Username:
-          <input value={username} onChange={e => setUsername(e.target.value)} />
-        </label>
-        <label>
-          Password:
-          <input value={password} onChange={e => setPassword(e.target.value)} />
-        </label>
-        <button type="submit" disabled={username === '' || password === ''}>Login</button>
-      </form>
-      <p>
-        Don&apos;t have an account?
-        <Link to="/signup">Sign up!</Link>
-      </p>
-    </>
+    <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+      <Card className="shadow rounded p-2" style={{ width: '50%' }}>
+        <Card.Body>
+          <Card.Title className="text-center">Log In</Card.Title>
+          <Form
+            onSubmit={e => {
+              e.preventDefault()
+              loginUser()
+            }}
+          >
+            <Form.Group>
+              <Form.Label>Username</Form.Label>
+              <Form.Control placeholder="Please enter a username" value={username} onChange={e => setUsername(e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mt-2">
+              <Form.Label>Password</Form.Label>
+              <Form.Control placeholder="Please enter a password" value={password} onChange={e => setPassword(e.target.value)} />
+            </Form.Group>
+            <div className="text-center">
+              <Button type="submit" className="mt-4" variant="primary" disabled={username === '' || password === ''}>Login</Button>
+            </div>
+          </Form>
+          <Card.Text className="mt-2 text-center">
+            Don&apos;t have an account?
+            <br />
+            <Link to="/signup">Sign up!</Link>
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    </div>
   )
 }
 

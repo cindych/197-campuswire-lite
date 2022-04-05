@@ -8,6 +8,7 @@ const Popup = ({ show, onHide }) => {
   const submitQuestion = async () => {
     await axios.post('/api/questions/add', { questionText: question })
     const { data } = await axios.get('api/questions')
+    setQuestion('')
     onHide()
   }
 
