@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { Modal, Button, Form } from 'react-bootstrap'
 
@@ -7,7 +7,6 @@ const Popup = ({ show, onHide }) => {
 
   const submitQuestion = async () => {
     await axios.post('/api/questions/add', { questionText: question })
-    const { data } = await axios.get('api/questions')
     setQuestion('')
     onHide()
   }
@@ -26,7 +25,7 @@ const Popup = ({ show, onHide }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form.Control as="textarea" rows={3} placeholder="type your question here" value={question} onChange={e => setQuestion(e.target.value)} />
+        <Form.Control as="textarea" rows={3} placeholder="Type your question here" value={question} onChange={e => setQuestion(e.target.value)} />
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={submitQuestion}>Submit Question</Button>

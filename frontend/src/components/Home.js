@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-import LeftSide from './LeftSide'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import Card from 'react-bootstrap/Card'
+
+import Questions from './Questions'
 import Header from './Header'
 
 const Home = () => {
@@ -24,7 +28,7 @@ const Home = () => {
         setUsername('')
       }
     } catch (err) {
-      alert('Error in displaying homepage. Please try again later!')
+      alert('Error checking if user is logged in!')
     }
   }
 
@@ -70,26 +74,12 @@ const Home = () => {
     }
   }
 
-  const renderCurrQuestion = () => {
-    if (currQuestion.questionText && currQuestion.author && currQuestion._id) {
-      return (
-        <div className="curr-question">
-          <h1>{currQuestion.questionText}</h1>
-          <p>{`Author: ${currQuestion.author}`}</p>
-          <p>{`Answer: ${currQuestion.answer || ''}`}</p>
-        </div>
-      )
-    } return (
-      <h1>No questions asked yet!</h1>
-    )
-  }
-
   useEffect(() => {
     checkUserLoggedIn()
     // set curr question to first question if loading for first time
     const firstTime = async () => {
       const data = await getQuestions()
-      if (!currQuestion.questionText) {
+      if (!currQuestion.questionText && data.length > 0) {
         setCurrQuestion({
           ...currQuestion, questionText: data[0].questionText, answer: data[0].answer || '', author: data[0].author, _id: data[0]._id,
         })
@@ -110,20 +100,34 @@ const Home = () => {
     <>
       <Header isLoggedIn={isLoggedIn} checkUserLoggedIn={checkUserLoggedIn} username={username} />
 
-      <div className="questions-container">
-        <LeftSide isLoggedIn={isLoggedIn} questions={questions} changeQuestion={changeQuestion} />
-        <div className="right-side">
-          {renderCurrQuestion()}
-          {isLoggedIn && (
+      <div className="questions-container d-flex p-3">
+        <div className="left-side text-center" style={{ width: '20vw' }}>
+          <Questions isLoggedIn={isLoggedIn} questions={questions} changeQuestion={changeQuestion} />
+        </div>
+        <Card className={isLoggedIn ? 'right-side d-flex flex-column justify-content-evenly rounded shadow p-3 ms-3' : 'right-side rounded shadow p-3 ms-3'} style={{ width: '70vw', height: '50vh', maxHeight: '700px' }}>
+          {currQuestion.questionText && currQuestion.author && currQuestion._id ? (
+            <div className="curr-question">
+              <h1>{currQuestion.questionText}</h1>
+              <p className="m-0 p-0 mb-1">
+                <b>Author:&nbsp;</b>
+                {currQuestion.author}
+              </p>
+              <p>
+                <b>Answer:&nbsp;</b>
+                {currQuestion.answer || ''}
+              </p>
+            </div>
+          ) : (
+            <h1 style={{ alignSelf: 'start', height: '100%' }}>No questions asked yet!</h1>
+          )}
+          {isLoggedIn && currQuestion.questionText && (
             <div className="answer-box">
               <p>Answer this question:</p>
-              <textarea value={answer} onChange={e => setAnswer(e.target.value)} />
-              <button type="button" onClick={answerQuestion} disabled={answer === ''}>
-                Submit Answer
-              </button>
+              <Form.Control as="textarea" rows={3} value={answer} onChange={e => setAnswer(e.target.value)} />
+              <Button className="mt-3" style={{ width: '100%' }} onClick={answerQuestion} disabled={answer === ''}>Submit Answer</Button>
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </>
   )

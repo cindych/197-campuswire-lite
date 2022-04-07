@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
@@ -27,9 +27,9 @@ const Login = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-      <Card className="shadow rounded p-2" style={{ width: '50%' }}>
+      <Card className="shadow rounded p-2" style={{ width: '40%' }}>
         <Card.Body>
-          <Card.Title className="text-center">Log In</Card.Title>
+          <Card.Title className="text-center">LOGIN</Card.Title>
           <Form
             onSubmit={e => {
               e.preventDefault()
@@ -38,19 +38,18 @@ const Login = () => {
           >
             <Form.Group>
               <Form.Label>Username</Form.Label>
-              <Form.Control placeholder="Please enter a username" value={username} onChange={e => setUsername(e.target.value)} />
+              <Form.Control placeholder="Please enter your username" value={username} onChange={e => setUsername(e.target.value)} />
             </Form.Group>
             <Form.Group className="mt-2">
               <Form.Label>Password</Form.Label>
-              <Form.Control placeholder="Please enter a password" value={password} onChange={e => setPassword(e.target.value)} />
+              <Form.Control placeholder="Please enter your password" value={password} onChange={e => setPassword(e.target.value)} />
             </Form.Group>
             <div className="text-center">
               <Button type="submit" className="mt-4" variant="primary" disabled={username === '' || password === ''}>Login</Button>
             </div>
           </Form>
           <Card.Text className="mt-2 text-center">
-            Don&apos;t have an account?
-            <br />
+            Don&apos;t have an account?&nbsp;
             <Link to="/signup">Sign up!</Link>
           </Card.Text>
         </Card.Body>
