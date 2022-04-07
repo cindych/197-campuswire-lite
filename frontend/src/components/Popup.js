@@ -28,7 +28,7 @@ const Popup = ({ show, onHide }) => {
         <Form.Control as="textarea" rows={3} placeholder="Type your question here" value={question} onChange={e => setQuestion(e.target.value)} />
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={submitQuestion}>Submit Question</Button>
+        <Button onClick={submitQuestion} disabled={question === ''}>Submit Question</Button>
         <Button onClick={onHide}>Close</Button>
       </Modal.Footer>
     </Modal>
